@@ -84,12 +84,18 @@ export function Recommendations({ profile, onNavigate, onSelectCar }: Recommenda
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <nav className="flex items-center justify-between px-6 py-4 border-b border-border">
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-            <Zap className="w-6 h-6 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold text-foreground">Vehix</span>
-        </div>
+    <button
+  onClick={() => onNavigate("landing")}
+  className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer"
+>
+  <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+    <Zap className="w-6 h-6 text-primary-foreground" />
+  </div>
+  <div className="flex flex-col">
+    <span className="text-xl font-bold text-foreground leading-none">Vehix</span>
+    <span className="text-xs text-primary leading-none">Chile</span>
+  </div>
+</button>
       </nav>
 
       <div className="flex-1 flex flex-col lg:flex-row">
