@@ -22,13 +22,13 @@ export function ProfileForm({ profile, setProfile, onNavigate }: ProfileFormProp
   const formatPrice = (value: number) => {
     return `$${value.toLocaleString("es-CL")}`
   }
-
-  const canProceed = () => {
-    if (step === 1) return profile.estadoCivil && profile.hijos
-    if (step === 2) return profile.estiloVida
-    if (step === 3) return profile.combustible
-    return false
-  }
+const canProceed = () => {
+  if (step === 1) return profile.estadoCivil && profile.hijos
+  if (step === 2) return profile.estiloVida
+  if (step === 3) return profile.combustible
+  if (step === 4) return profile.paraQuien && profile.kmDiarios && profile.prioridad
+  return false
+}
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -60,7 +60,7 @@ export function ProfileForm({ profile, setProfile, onNavigate }: ProfileFormProp
       <div className="px-6 py-6">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-2">
-            {[1, 2, 3].map((s) => (
+            {[1, 2, 3, 4].map((s) => (
               <div key={s} className="flex items-center">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
                   s < step 
@@ -71,7 +71,7 @@ export function ProfileForm({ profile, setProfile, onNavigate }: ProfileFormProp
                 }`}>
                   {s < step ? <Check className="w-5 h-5" /> : s}
                 </div>
-                {s < 3 && (
+                {s < 4 && (
                   <div className={`w-20 md:w-32 h-1 mx-2 ${
                     s < step ? "bg-primary" : "bg-secondary"
                   }`} />
@@ -94,6 +94,9 @@ export function ProfileForm({ profile, setProfile, onNavigate }: ProfileFormProp
           {step === 3 && (
             <Step3 profile={profile} updateProfile={updateProfile} formatPrice={formatPrice} />
           )}
+ {step === 4 && (
+  <Step4 profile={profile} updateProfile={updateProfile} />
+)}
 
           {/* Navigation Buttons */}
           <div className="flex justify-between mt-10">
@@ -110,7 +113,7 @@ export function ProfileForm({ profile, setProfile, onNavigate }: ProfileFormProp
               <div />
             )}
             
-            {step < 3 ? (
+            {step < 4 ? (
               <Button 
                 onClick={() => setStep(step + 1)}
                 disabled={!canProceed()}
@@ -257,7 +260,8 @@ function Step3({
         </div>
       </div>
 
-      {/* Profile Summary */}
+     {/* Profile Summary movido al Step4 */}
+{false && (
       <div className="bg-secondary rounded-xl p-6">
         <h3 className="text-lg font-semibold text-foreground mb-4">Resumen de tu perfil</h3>
         <div className="grid grid-cols-2 gap-4 text-sm">
@@ -277,12 +281,25 @@ function Step3({
             <span className="text-muted-foreground">Presupuesto:</span>
             <p className="text-primary font-medium">{formatPrice(profile.presupuesto)}</p>
           </div>
-          <div className="col-span-2">
-            <span className="text-muted-foreground">Combustible:</span>
-            <p className="text-foreground font-medium">{profile.combustible || "-"}</p>
-          </div>
+    <div>
+  <span className="text-muted-foreground">Combustible:</span>
+  <p className="text-foreground font-medium">{profile.combustible || "-"}</p>
+</div>
+<div>
+  <span className="text-muted-foreground">Para quién:</span>
+  <p className="text-foreground font-medium">{profile.paraQuien || "-"}</p>
+</div>
+<div>
+  <span className="text-muted-foreground">Km diarios:</span>
+  <p className="text-foreground font-medium">{profile.kmDiarios || "-"}</p>
+</div>
+<div className="col-span-2">
+  <span className="text-muted-foreground">Prioridad:</span>
+  <p className="text-foreground font-medium">{profile.prioridad || "-"}</p>
+</div>
         </div>
       </div>
+      )}
     </div>
   )
 }
@@ -307,5 +324,110 @@ function SelectCard({
     >
       {children}
     </button>
+  )
+}
+
+function Step4({
+  profile,
+  updateProfile,
+}: {
+  profile: UserProfile
+  updateProfile: (key: keyof UserProfile, value: string | number) => void
+}) {
+  return (
+    <div>
+      <h2 className="text-2xl font-bold text-foreground mb-8">
+        Últimos detalles
+      </h2>
+
+      <div className="mb-8">
+        <label className="block text-foreground font-medium mb-4">
+          ¿Para quién es el auto?
+        </label>
+        <div className="grid grid-cols-2 gap-4">
+          {["Solo para mí", "Para la familia", "Para el trabajo", "Para estudiar"].map((option) => (
+            <SelectCard
+              key={option}
+              selected={profile.paraQuien === option}
+              onClick={() => updateProfile("paraQuien", option)}
+            >
+              {option}
+            </SelectCard>
+          ))}
+        </div>
+      </div>
+
+      <div className="mb-8">
+        <label className="block text-foreground font-medium mb-4">
+          ¿Cuántos km manejas al día?
+        </label>
+        <div className="grid grid-cols-3 gap-4">
+          {["Menos de 20 km", "Entre 20 y 60 km", "Más de 60 km"].map((option) => (
+            <SelectCard
+              key={option}
+              selected={profile.kmDiarios === option}
+              onClick={() => updateProfile("kmDiarios", option)}
+            >
+              {option}
+            </SelectCard>
+          ))}
+        </div>
+      </div>
+
+      <div className="mb-8">
+        <label className="block text-foreground font-medium mb-4">
+          ¿Cuál es tu prioridad principal?
+        </label>
+        <div className="grid grid-cols-2 gap-4">
+          {["Seguridad", "Economía", "Comodidad", "Diseño / Estilo", "Rendimiento"].map((option) => (
+            <SelectCard
+              key={option}
+              selected={profile.prioridad === option}
+              onClick={() => updateProfile("prioridad", option)}
+            >
+              {option}
+            </SelectCard>
+          ))}
+        </div>
+</div>
+
+    <div className="bg-secondary rounded-xl p-6 mt-6">
+      <h3 className="text-lg font-semibold text-foreground mb-4">Resumen de tu perfil</h3>
+      <div className="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <span className="text-muted-foreground">Estado civil:</span>
+          <p className="text-foreground font-medium">{profile.estadoCivil || "-"}</p>
+        </div>
+        <div>
+          <span className="text-muted-foreground">Hijos:</span>
+          <p className="text-foreground font-medium">{profile.hijos || "-"}</p>
+        </div>
+        <div>
+          <span className="text-muted-foreground">Estilo de vida:</span>
+          <p className="text-foreground font-medium">{profile.estiloVida || "-"}</p>
+        </div>
+        <div>
+          <span className="text-muted-foreground">Presupuesto:</span>
+          <p className="text-primary font-medium">{`$${profile.presupuesto.toLocaleString("es-CL")}`}</p>
+        </div>
+        <div>
+          <span className="text-muted-foreground">Combustible:</span>
+          <p className="text-foreground font-medium">{profile.combustible || "-"}</p>
+        </div>
+        <div>
+          <span className="text-muted-foreground">Para quién:</span>
+          <p className="text-foreground font-medium">{profile.paraQuien || "-"}</p>
+        </div>
+        <div>
+          <span className="text-muted-foreground">Km diarios:</span>
+          <p className="text-foreground font-medium">{profile.kmDiarios || "-"}</p>
+        </div>
+        <div className="col-span-2">
+          <span className="text-muted-foreground">Prioridad:</span>
+          <p className="text-foreground font-medium">{profile.prioridad || "-"}</p>
+        </div>
+      </div>
+    </div>
+  </div>
   )
 }

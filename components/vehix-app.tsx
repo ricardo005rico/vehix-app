@@ -12,6 +12,9 @@ export type UserProfile = {
   estiloVida: string
   presupuesto: number
   combustible: string
+  kmDiarios: string
+  paraQuien: string
+  prioridad: string
 }
 
 export type Car = {
@@ -153,7 +156,10 @@ export function VehixApp() {
     hijos: "",
     estiloVida: "",
     presupuesto: 25000000,
-    combustible: ""
+    combustible: "",
+    kmDiarios: "",
+    paraQuien: "",
+    prioridad: ""
   })
   const [selectedCar, setSelectedCar] = useState<Car | null>(null)
 
