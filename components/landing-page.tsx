@@ -34,23 +34,30 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
       </nav>
 
       {/* Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 py-20">
-        <div className="text-center max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 text-balance">
-            Encuentra el auto perfecto para ti
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mb-10">
-            La forma más inteligente de encontrar tu próximo vehículo en Chile
-          </p>
-          <Button 
-            onClick={() => onNavigate("profile")}
-            size="lg"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6"
-          >
-            Comenzar ahora →
-          </Button>
-        </div>
-      </main>
+      <main className="flex-1 flex flex-col lg:flex-row items-center justify-center px-6 py-20 gap-12">
+  <div className="text-center lg:text-left max-w-xl">
+    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 text-balance">
+      Encuentra el auto perfecto para ti
+    </h1>
+    <p className="text-lg md:text-xl text-muted-foreground mb-10">
+      La forma más inteligente de encontrar tu próximo vehículo en Chile
+    </p>
+    <Button
+      onClick={() => onNavigate("profile")}
+      size="lg"
+      className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6"
+    >
+      Comenzar ahora →
+    </Button>
+  </div>
+  <div className="w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl">
+    <img
+      src="/hero-keys.jpg"
+      alt="Auto moderno"
+      className="w-full h-80 object-cover"
+    />
+  </div>
+</main>
 
       {/* Features Section */}
       <section className="px-6 py-20 bg-card">
