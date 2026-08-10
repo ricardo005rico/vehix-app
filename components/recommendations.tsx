@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Zap, ArrowLeft, Users, Fuel, Package, Heart, Star, ChevronDown, Gauge } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
@@ -30,6 +30,10 @@ export function Recommendations({ profile, onNavigate, onSelectCar }: Recommenda
   const [favorites, setFavorites] = useState<number[]>([])
   const [sortBy, setSortBy] = useState("compatibilidad")
   const [showSortDropdown, setShowSortDropdown] = useState(false)
+  const [aiResults, setAiResults] = useState<any[]>([])
+const [isLoading, setIsLoading] = useState(false)
+const [aiQueries, setAiQueries] = useState<string[]>([])
+
 
   const toggleFavorite = (carId: number) => {
     setFavorites(prev => 
@@ -38,7 +42,27 @@ export function Recommendations({ profile, onNavigate, onSelectCar }: Recommenda
         : [...prev, carId]
     )
   }
+const searchWithAI = async () => {
+  setIsLoading(true)
+  try {
+    const res = await fetch("/api/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ profile })
+    })
+    const data = await res.json()
+    setAiResults(data.results)
+    setAiQueries(data.queries)
+  } catch (error) {
+    console.error("Error buscando autos:", error)
+  } finally {
+    setIsLoading(false)
+  }
+}
 
+useEffect(() => {
+  searchWithAI()
+}, [])
   const toggleFilter = (
     value: string, 
     selected: string[], 
